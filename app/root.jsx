@@ -1,16 +1,19 @@
 import {
+  Link,
   Links,
   LiveReload,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
-} from "@remix-run/react";
+  isRouteErrorResponse,
+  useRouteError,
+} from '@remix-run/react';
 
-import MainNavigation from "~/components/MainNavigation";
-import styles from "~/styles/main.css";
+import MainNavigation from '~/components/MainNavigation';
+import styles from '~/styles/main.css';
 
-export const links = () => [{ rel: "stylesheet", href: styles }];
+export const links = () => [{ rel: 'stylesheet', href: styles }];
 
 export default function App() {
   return (
@@ -33,3 +36,63 @@ export default function App() {
     </html>
   );
 }
+
+export const ErrorBoundary = () => {
+  const error = useRouteError();
+
+  if (isRouteErrorResponse(error)) {
+    console.log(error);
+    return (
+      <html lang="en">
+        <head>
+          <meta charSet="utf-8" />
+          <meta name="viewport" content="width=device-width,initial-scale=1" />
+          <Meta />
+          <Links />
+          <title>{error?.statusText}</title>
+        </head>
+        <body>
+          <header>
+            <MainNavigation />
+          </header>
+          <main className="error">
+            <p>
+              {error?.status} {error?.statusText}
+            </p>
+            <p>{error?.data}</p>
+          </main>
+          <ScrollRestoration />
+          <Scripts />
+          <LiveReload />
+        </body>
+      </html>
+    );
+  }
+
+  return (
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <Meta />
+        <Links />
+        <title>An error occured!</title>
+      </head>
+      <body>
+        <header>
+          <MainNavigation />
+        </header>
+        <main className="error">
+          <h1>An error occured!</h1>
+          <p>{error?.message}</p>
+          <p>
+            Back to <Link to="/">saftey</Link>
+          </p>
+        </main>
+        <ScrollRestoration />
+        <Scripts />
+        <LiveReload />
+      </body>
+    </html>
+  );
+};

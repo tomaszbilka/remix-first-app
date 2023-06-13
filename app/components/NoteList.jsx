@@ -1,9 +1,9 @@
-import styles from "./NoteList.css";
+import styles from './NoteList.css';
 
 function NoteList({ notes }) {
   return (
     <ul id="note-list">
-      {notes.map((note, index) => (
+      {notes?.map((note, index) => (
         <li key={note.id} className="note">
           <article>
             <header>
@@ -11,12 +11,12 @@ function NoteList({ notes }) {
                 <li>#{index + 1}</li>
                 <li>
                   <time dateTime={note.id}>
-                    {new Date(note.id).toLocaleDateString("en-US", {
-                      day: "numeric",
-                      month: "short",
-                      year: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
+                    {new Date(note.id).toLocaleDateString('en-US', {
+                      day: 'numeric',
+                      month: 'short',
+                      year: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
                     })}
                   </time>
                 </li>
@@ -34,5 +34,5 @@ function NoteList({ notes }) {
 export default NoteList;
 
 export function links() {
-  return [{ rel: "stylesheet", href: styles }];
+  return [{ rel: 'stylesheet', href: styles }];
 }

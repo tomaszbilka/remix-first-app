@@ -1,8 +1,13 @@
-import { redirect } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import { getStoredNotes, storeNotes } from '~/data/notes';
+import {
+  Link,
+  isRouteErrorResponse,
+  useLoaderData,
+  useRouteError,
+} from '@remix-run/react';
+import { json, redirect } from '@remix-run/node';
 import NewNote, { links as newNotesLinks } from '~/components/NewNote';
 import NoteList, { links as noteListLinks } from '~/components/NoteList';
-import { getStoredNotes, storeNotes } from '~/data/notes';
 
 const NotesPage = () => {
   const notes = useLoaderData();
@@ -36,5 +41,40 @@ export const action = async ({ request }) => {
 
 export const loader = async () => {
   const notes = await getStoredNotes();
+  if (!notes || notes.length === 0) {
+    throw json(
+      { message: 'Could not find any notes' },
+      {
+        status: 404,
+        statusText: 'Not found',
+      }
+    );
+  }
   return notes;
+};
+
+export const ErrorBoundary = () => {
+  const error = useRouteError();
+
+  if (isRouteErrorResponse(error)) {
+    return (
+      <main className="info-message">
+        <NewNote />
+        <p>
+          {error?.status} {error?.statusText}
+        </p>
+        <p>{error?.data?.message}</p>
+      </main>
+    );
+  }
+
+  return (
+    <main className="error">
+      <h1>An error with your notes occured!</h1>
+      <p>{error?.message}</p>
+      <p>
+        Back to <Link to="/">saftey</Link>
+      </p>
+    </main>
+  );
 };
