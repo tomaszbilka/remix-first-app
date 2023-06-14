@@ -1,13 +1,13 @@
-import { getStoredNotes, storeNotes } from '~/data/notes';
+import { getStoredNotes, storeNotes } from "~/data/notes";
 import {
   Link,
   isRouteErrorResponse,
   useLoaderData,
   useRouteError,
-} from '@remix-run/react';
-import { json, redirect } from '@remix-run/node';
-import NewNote, { links as newNotesLinks } from '~/components/NewNote';
-import NoteList, { links as noteListLinks } from '~/components/NoteList';
+} from "@remix-run/react";
+import { json, redirect } from "@remix-run/node";
+import NewNote, { links as newNotesLinks } from "~/components/NewNote";
+import NoteList, { links as noteListLinks } from "~/components/NoteList";
 
 const NotesPage = () => {
   const notes = useLoaderData();
@@ -24,29 +24,34 @@ export default NotesPage;
 
 export const links = () => [...newNotesLinks(), ...noteListLinks()];
 
+export const meta = () => [
+  { title: "All notes" },
+  { name: "description", content: "My note page description" },
+];
+
 export const action = async ({ request }) => {
   const formData = await request.formData();
   const noteData = Object.fromEntries(formData);
   //Add validation...
   if (noteData.title.trim().length < 3) {
-    return { message: 'Invalid title - must be at least 3 characters long!' };
+    return { message: "Invalid title - must be at least 3 characters long!" };
   }
 
   const existingNotes = await getStoredNotes();
   noteData.id = new Date().toISOString();
   const updatedNotes = existingNotes.concat(noteData);
   await storeNotes(updatedNotes);
-  return redirect('/notes');
+  return redirect("/notes");
 };
 
 export const loader = async () => {
   const notes = await getStoredNotes();
   if (!notes || notes.length === 0) {
     throw json(
-      { message: 'Could not find any notes' },
+      { message: "Could not find any notes" },
       {
         status: 404,
-        statusText: 'Not found',
+        statusText: "Not found",
       }
     );
   }

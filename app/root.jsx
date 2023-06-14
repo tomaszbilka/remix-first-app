@@ -8,12 +8,12 @@ import {
   ScrollRestoration,
   isRouteErrorResponse,
   useRouteError,
-} from '@remix-run/react';
+} from "@remix-run/react";
 
-import MainNavigation from '~/components/MainNavigation';
-import styles from '~/styles/main.css';
+import MainNavigation from "~/components/MainNavigation";
+import styles from "~/styles/main.css";
 
-export const links = () => [{ rel: 'stylesheet', href: styles }];
+export const links = () => [{ rel: "stylesheet", href: styles }];
 
 export default function App() {
   return (
@@ -41,7 +41,6 @@ export const ErrorBoundary = () => {
   const error = useRouteError();
 
   if (isRouteErrorResponse(error)) {
-    console.log(error);
     return (
       <html lang="en">
         <head>
@@ -59,7 +58,7 @@ export const ErrorBoundary = () => {
             <p>
               {error?.status} {error?.statusText}
             </p>
-            <p>{error?.data}</p>
+            <p>{error?.data?.message || "Some response error occured!"}</p>
           </main>
           <ScrollRestoration />
           <Scripts />
@@ -96,3 +95,8 @@ export const ErrorBoundary = () => {
     </html>
   );
 };
+
+export const meta = () => [
+  { title: "#Remix-app#" },
+  { name: "description", content: "My learning app with Remix" },
+];

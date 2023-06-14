@@ -2,8 +2,6 @@ import { Link } from "@remix-run/react";
 
 import styles from "~/styles/home.css";
 
-export const links = () => [{ rel: "stylesheet", href: styles }];
-
 const Index = () => {
   return (
     <main id="content">
@@ -17,3 +15,5 @@ const Index = () => {
 };
 
 export default Index;
+
+export const links = () => [{ rel: "stylesheet", href: styles }];
